@@ -12,4 +12,6 @@ data/processed/*.csv
 artifacts/model/*.joblib
 logs/*.log
 .env
+
 .pytest_cache/
+.dvc/config.local
