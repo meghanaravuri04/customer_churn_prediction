@@ -1,2 +1,5 @@
 [core]
     no_scm = True
+    remote = dagshub
+['remote "dagshub"']
+    url = https://dagshub.com/meghanaravuri04/customer_churn_prediction.dvc
