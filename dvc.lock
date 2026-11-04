@@ -1,0 +1,114 @@
+schema: '2.0'
+stages:
+  download:
+    cmd: python -m src.data.download_dataset
+    deps:
+    - path: requirements.txt
+      hash: md5
+      md5: bf64fefbf3044765785db4d272510586
+      size: 290
+    - path: src/data/download_dataset.py
+      hash: md5
+      md5: dba07049721ac64e9d46a875f209c6b0
+      size: 877
+    outs:
+    - path: data/raw/dataset.csv
+      hash: md5
+      md5: 0f9de68e012bd3aed5fa7cdc9fc421af
+      size: 977501
+  preprocess:
+    cmd: python -m src.data.preprocess
+    deps:
+    - path: data/raw/dataset.csv
+      hash: md5
+      md5: 0f9de68e012bd3aed5fa7cdc9fc421af
+      size: 977501
+    - path: src/data/preprocess.py
+      hash: md5
+      md5: f29c2a70b6bfeb656f598673d9d3a808
+      size: 2444
+    - path: src/features/build_features.py
+      hash: md5
+      md5: 67f2e9d7026778b8c162f694726166ad
+      size: 2246
+    - path: src/utils/logger.py
+      hash: md5
+      md5: ebdb15754966094969515c5b72f0e32d
+      size: 485
+    params:
+      params.yaml:
+        prepare.random_state: 42
+        prepare.test_size: 0.2
+    outs:
+    - path: data/processed/test.csv
+      hash: md5
+      md5: 8ab6594f0d65f4cfee49b0f7737516b4
+      size: 194459
+    - path: data/processed/train.csv
+      hash: md5
+      md5: 116cb99f18c47137befc5042b634c2be
+      size: 774098
+  train:
+    cmd: python -m src.models.train
+    deps:
+    - path: data/processed/train.csv
+      hash: md5
+      md5: 116cb99f18c47137befc5042b634c2be
+      size: 774098
+    - path: requirements.txt
+      hash: md5
+      md5: bf64fefbf3044765785db4d272510586
+      size: 290
+    - path: src/features/build_features.py
+      hash: md5
+      md5: 67f2e9d7026778b8c162f694726166ad
+      size: 2246
+    - path: src/models/train.py
+      hash: md5
+      md5: 2839f4cc0b60426631ee1c082f790ecd
+      size: 4355
+    - path: src/utils/logger.py
+      hash: md5
+      md5: ebdb15754966094969515c5b72f0e32d
+      size: 485
+    params:
+      params.yaml:
+        train.max_depth: 10
+        train.n_estimators: 100
+        train.validation_size: 0.2
+    outs:
+    - path: artifacts/model/model.joblib
+      hash: md5
+      md5: e26ff1fe760fb25ad84814c070c5a335
+      size: 1263
+    - path: artifacts/model/scaler.joblib
+      hash: md5
+      md5: edb75e9290cc4b017a75658f12025114
+      size: 1079
+  evaluate:
+    cmd: python -m src.models.evaluate
+    deps:
+    - path: artifacts/model/model.joblib
+      hash: md5
+      md5: e26ff1fe760fb25ad84814c070c5a335
+      size: 1263
+    - path: artifacts/model/scaler.joblib
+      hash: md5
+      md5: edb75e9290cc4b017a75658f12025114
+      size: 1079
+    - path: data/processed/test.csv
+      hash: md5
+      md5: 8ab6594f0d65f4cfee49b0f7737516b4
+      size: 194459
+    - path: src/features/build_features.py
+      hash: md5
+      md5: 67f2e9d7026778b8c162f694726166ad
+      size: 2246
+    - path: src/models/evaluate.py
+      hash: md5
+      md5: 7c7f26eae84781bf003be1f1f636627e
+      size: 1343
+    - path: src/utils/logger.py
+      hash: md5
+      md5: ebdb15754966094969515c5b72f0e32d
+      size: 485

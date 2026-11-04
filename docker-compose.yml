@@ -1,0 +1,23 @@
+# docker-compose.yml
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    environment:
+      API_URL: http://api:8000
+    ports:
+      - "8501:8501"
+    volumes:
+      - .:/app
+    depends_on:
+      - api

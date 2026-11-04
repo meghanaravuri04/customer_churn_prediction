@@ -1,0 +1,15 @@
+# .gitignore
+__pycache__/
+*.py[cod]
+.venv/
+mlruns/
+mlflow.db
+mlflow.db-*
+.dvc/cache/
+.dvc/tmp/
+data/raw/dataset.csv
+data/processed/*.csv
+artifacts/model/*.joblib
+logs/*.log
+.env
+.pytest_cache/

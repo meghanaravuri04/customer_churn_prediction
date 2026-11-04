@@ -1,0 +1,49 @@
+# dvc.yaml
+stages:
+  download:
+    cmd: python -m src.data.download_dataset
+    deps:
+      - src/data/download_dataset.py
+      - requirements.txt
+    outs:
+      - data/raw/dataset.csv
+
+  preprocess:
+    cmd: python -m src.data.preprocess
+    deps:
+      - src/data/preprocess.py
+      - src/features/build_features.py
+      - src/utils/logger.py
+      - data/raw/dataset.csv
+    params:
+      - prepare.test_size
+      - prepare.random_state
+    outs:
+      - data/processed/train.csv
+      - data/processed/test.csv
+
+  train:
+    cmd: python -m src.models.train
+    deps:
+      - src/models/train.py
+      - data/processed/train.csv
+      - src/features/build_features.py
+      - src/utils/logger.py
+      - requirements.txt
+    params:
+      - train.n_estimators
+      - train.max_depth
+      - train.validation_size
+    outs:
+      - artifacts/model/model.joblib
+      - artifacts/model/scaler.joblib
+
+  evaluate:
+    cmd: python -m src.models.evaluate
+    deps:
+      - src/models/evaluate.py
+      - src/features/build_features.py
+      - src/utils/logger.py
+      - data/processed/test.csv
+      - artifacts/model/model.joblib
+      - artifacts/model/scaler.joblib
